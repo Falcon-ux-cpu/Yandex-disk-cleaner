@@ -32,7 +32,7 @@ def get_old_files():
     items = data.get("_embedded", {}).get("items", [])
     
     now = datetime.now(timezone.utc)
-    one_months_ago = now - timedelta(days=30)
+    one_month_ago = now - timedelta(days=30)
     
     files_to_delete = []
     for item in items:
@@ -43,7 +43,7 @@ def get_old_files():
         # Парсим дату (Яндекс возвращает ISO формат, например, 2026-06-05T12:00:00Z)
         created_at = datetime.fromisoformat(item["created"].replace("Z", "+00:00"))
         
-        if created_at < two_weeks_ago:
+        if created_at < one_month_ago:
             files_to_delete.append(item["path"])
             
     return files_to_delete
