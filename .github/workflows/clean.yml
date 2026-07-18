@@ -1,1 +1,30 @@
+name: Yandex.Disk Cleaner
 
+on:
+  repository_dispatch:
+    types: [trigger-cleanup]
+  workflow_dispatch: # Позволит запускать вручную кнопкой в интерфейсе GitHub
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run script
+      env:
+        YANDEX_DISK_TOKEN: ${{ secrets.YANDEX_DISK_TOKEN }}
+        TARGET_FOLDER: "/" # Измените на нужную папку, если требуется
+      run: python clean_disk.py
